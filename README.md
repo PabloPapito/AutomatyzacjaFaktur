@@ -28,7 +28,7 @@ To rozwiązanie pozwala zeskanować fakturę telefonem, zapisać ją w formacie 
    Możesz też dodać plik PDF ręcznie do wskazanego folderu w Dropbox.
 
 2. **Plik trafia do folderu „faktury”**  
-   Skan lub PDF należy umieścić w dedykowanym folderze, np. `faktury`.  
+   Skan lub PDF należy umieścić w dedykowanym folderze, np. `OCR_Rachunki`.  
    To właśnie ten folder jest monitorowany przez automatyzację.
 
 3. **Automatyzacja w Make uruchamia się**  
