@@ -1,0 +1,741 @@
+{
+    "name": "Faktury/rachunki",
+    "flow": [
+        {
+            "id": 2,
+            "module": "dropbox:watchFiles2",
+            "version": 5,
+            "parameters": {
+                "path": "/OCR_Rachunki",
+                "limit": 3,
+                "recursive": false,
+                "undefined": "list",
+                "__IMTCONN__": 9521208
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "undefined": {
+                            "label": "Select from List"
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            },
+                            "label": "My Dropbox connection (automatyzacjabiurowa@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "label": "Folder Search Method",
+                        "validate": {
+                            "enum": [
+                                "list",
+                                "keyword"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "recursive",
+                        "type": "boolean",
+                        "label": "Watch also subfolders",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "path",
+                        "type": "folder",
+                        "label": "Folder Path"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "dropbox:getFile",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 9521208
+            },
+            "mapper": {
+                "path": "{{2.path_lower}}",
+                "select": "map"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 242,
+                    "y": -12
+                },
+                "restore": {
+                    "expect": {
+                        "select": {
+                            "label": "Map a file path"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            },
+                            "label": "My Dropbox connection (automatyzacjabiurowa@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Way of selecting files",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "file"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "type": "text",
+                        "label": "File Path",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 14,
+            "module": "pdf-co:AiInvoiceParser",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 9521707
+            },
+            "mapper": {
+                "export": {
+                    "exportType": "inline"
+                },
+                "import": {
+                    "data": "{{9.data}}",
+                    "importType": "upload"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 542,
+                    "y": -12
+                },
+                "restore": {
+                    "expect": {
+                        "export": {
+                            "nested": {
+                                "exportType": {
+                                    "label": "JSON Output"
+                                }
+                            }
+                        },
+                        "import": {
+                            "nested": {
+                                "importType": {
+                                    "label": "Upload a File"
+                                }
+                            }
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "pdf-co"
+                            },
+                            "label": "My PDF.co connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:pdf-co",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "import",
+                        "spec": [
+                            {
+                                "name": "importType",
+                                "type": "select",
+                                "label": "Input File",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "upload",
+                                        "url"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "data",
+                                "type": "buffer",
+                                "label": "Data",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Import Options",
+                        "required": true
+                    },
+                    {
+                        "name": "callback",
+                        "type": "url",
+                        "label": "Webhook URL"
+                    },
+                    {
+                        "name": "export",
+                        "spec": [
+                            {
+                                "name": "exportType",
+                                "type": "select",
+                                "label": "Export Type",
+                                "required": true,
+                                "validate": {
+                                    "enum": [
+                                        "downloadFile",
+                                        "inline"
+                                    ]
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Export Options",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{14.body}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 842,
+                    "y": -12
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "Choose a data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 28,
+            "module": "google-sheets:addRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 9521901
+            },
+            "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                    "0": "{{17.invoice.invoiceNo}}",
+                    "1": "{{if(length(17.invoice.invoiceDate) = 0; ; if(contains(17.invoice.invoiceDate; \".\"); if(length(17.invoice.invoiceDate) = 10; if(substring(17.invoice.invoiceDate; 4; 5) = \".\"; formatDate(parseDate(17.invoice.invoiceDate; \"YYYY.MM.DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.invoice.invoiceDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.invoice.invoiceDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); if(contains(17.invoice.invoiceDate; \"-\"); if(length(17.invoice.invoiceDate) = 10; if(substring(17.invoice.invoiceDate; 4; 5) = \"-\"; formatDate(parseDate(17.invoice.invoiceDate; \"YYYY-MM-DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.invoice.invoiceDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.invoice.invoiceDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); 17.invoice.invoiceDate)))}}",
+                    "2": "{{if(length(17.invoice.invoiceDate) = 0; ; if(contains(17.invoice.invoiceDate; \".\"); if(length(17.invoice.invoiceDate) = 10; if(substring(17.invoice.invoiceDate; 4; 5) = \".\"; formatDate(parseDate(17.invoice.invoiceDate; \"YYYY.MM.DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.invoice.invoiceDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.invoice.invoiceDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); if(contains(17.invoice.invoiceDate; \"-\"); if(length(17.invoice.invoiceDate) = 10; if(substring(17.invoice.invoiceDate; 4; 5) = \"-\"; formatDate(parseDate(17.invoice.invoiceDate; \"YYYY-MM-DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.invoice.invoiceDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.invoice.invoiceDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); 17.invoice.invoiceDate)))}}",
+                    "3": "{{if(length(17.paymentDetails.dueDate) = 0; ; if(contains(17.paymentDetails.dueDate; \".\"); if(length(17.paymentDetails.dueDate) = 10; if(substring(17.paymentDetails.dueDate; 4; 5) = \".\"; formatDate(parseDate(17.paymentDetails.dueDate; \"YYYY.MM.DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.paymentDetails.dueDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.paymentDetails.dueDate; \"D.M.YYYY\"); \"YYYY-MM-DD\")); if(contains(17.paymentDetails.dueDate; \"-\"); if(length(17.paymentDetails.dueDate) = 10; if(substring(17.paymentDetails.dueDate; 4; 5) = \"-\"; formatDate(parseDate(17.paymentDetails.dueDate; \"YYYY-MM-DD\"); \"YYYY-MM-DD\"); formatDate(parseDate(17.paymentDetails.dueDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); formatDate(parseDate(17.paymentDetails.dueDate; \"D-M-YYYY\"); \"YYYY-MM-DD\")); 17.paymentDetails.dueDate)))}}",
+                    "4": "{{17.vendor.name}}",
+                    "5": "{{replace(replace(17.vendor.entityId; \"-\"; emptystring); \"NIP:\"; emptystring)}}",
+                    "6": "{{replace(17.vendor.address.streetAddress; lower(\"ul.\"); emptystring)}}",
+                    "7": "{{17.vendor.address.city}}",
+                    "8": "{{17.vendor.address.postalCode}}",
+                    "9": "PL",
+                    "10": "{{17.customer.billTo.name}}",
+                    "11": "{{replace(17.customer.billTo.address.streetAddress; lower(\"ul.\"); emptystring)}}",
+                    "12": "{{17.customer.billTo.address.city}}",
+                    "13": "{{17.customer.billTo.address.postalCode}}",
+                    "14": "PL",
+                    "15": "{{17.lineItems[].product_name | 17.lineItems[].service_name}}",
+                    "16": "{{replace(17.paymentDetails.subtotal; \".\"; \",\")}}",
+                    "17": "{{replace(17.paymentDetails.tax; \".\"; \",\") | replace(17.lineItems[].vat_rate; \".\"; \",\")}}",
+                    "18": "{{replace(replace(17.paymentDetails.total; \".\"; \",\") | replace(17.lineItems[].gross_price; \".\"; \",\") | replace(17.lineItems[].gross_value; \".\"; \",\") | replace(17.total_amount_due.amount; \".\"; \",\"); \"PLN\"; emptystring)}}",
+                    "19": "PLN",
+                    "20": "{{replace(17.lineItems[].vat_rate; \"%\"; emptystring) | replace(17.lineItems[].`VAT Rate`; \"%\"; emptystring)}}",
+                    "21": "{{17.paymentDetails.paymentTerms}}",
+                    "22": "{{replace(17.lineItems[].quantity; \".\"; \",\") | replace(17.lineItems[].Quantity; \".\"; \",\")}}",
+                    "23": "{{17.others.notes}}"
+                },
+                "sheetId": "Faktury ",
+                "spreadsheetId": "/1XcNod5BhFseqvn1TxVz4i1LwbOT3YndlpyLGaeusaug",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1142,
+                    "y": -12
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "mode": {
+                            "label": "Search by path"
+                        },
+                        "sheetId": {
+                            "label": "Faktury "
+                        },
+                        "spreadsheetId": {
+                            "path": [
+                                "OCR_Rachunki"
+                            ]
+                        },
+                        "includesHeaders": {
+                            "label": "Yes",
+                            "nested": [
+                                {
+                                    "name": "values",
+                                    "spec": [
+                                        {
+                                            "name": "0",
+                                            "type": "text",
+                                            "label": "Numer faktury (A)"
+                                        },
+                                        {
+                                            "name": "1",
+                                            "type": "text",
+                                            "label": "Data wystawienia (B)"
+                                        },
+                                        {
+                                            "name": "2",
+                                            "type": "text",
+                                            "label": "Data sprzedaży (C)"
+                                        },
+                                        {
+                                            "name": "3",
+                                            "type": "text",
+                                            "label": "Termin płatności / Zapłacono (D)"
+                                        },
+                                        {
+                                            "name": "4",
+                                            "type": "text",
+                                            "label": "Nazwa sprzedawcy (E)"
+                                        },
+                                        {
+                                            "name": "5",
+                                            "type": "text",
+                                            "label": "NIP sprzedawcy (F)"
+                                        },
+                                        {
+                                            "name": "6",
+                                            "type": "text",
+                                            "label": "Ulica sprzedawcy (G)"
+                                        },
+                                        {
+                                            "name": "7",
+                                            "type": "text",
+                                            "label": "Miasto sprzedawcy (H)"
+                                        },
+                                        {
+                                            "name": "8",
+                                            "type": "text",
+                                            "label": "Kod pocztowy sprzedawcy (I)"
+                                        },
+                                        {
+                                            "name": "9",
+                                            "type": "text",
+                                            "label": "Kraj sprzedawcy (J)"
+                                        },
+                                        {
+                                            "name": "10",
+                                            "type": "text",
+                                            "label": "Nazwa nabywcy (K)"
+                                        },
+                                        {
+                                            "name": "11",
+                                            "type": "text",
+                                            "label": "Ulica nabywcy (L)"
+                                        },
+                                        {
+                                            "name": "12",
+                                            "type": "text",
+                                            "label": "Miasto nabywcy (M)"
+                                        },
+                                        {
+                                            "name": "13",
+                                            "type": "text",
+                                            "label": "Kod pocztowy nabywcy (N)"
+                                        },
+                                        {
+                                            "name": "14",
+                                            "type": "text",
+                                            "label": "Kraj nabywcy (O)"
+                                        },
+                                        {
+                                            "name": "15",
+                                            "type": "text",
+                                            "label": "Produkt/usługa (P)"
+                                        },
+                                        {
+                                            "name": "16",
+                                            "type": "text",
+                                            "label": "Wartość netto (Q)"
+                                        },
+                                        {
+                                            "name": "17",
+                                            "type": "text",
+                                            "label": "Wartość VAT (R)"
+                                        },
+                                        {
+                                            "name": "18",
+                                            "type": "text",
+                                            "label": "Wartość brutto (S)"
+                                        },
+                                        {
+                                            "name": "19",
+                                            "type": "text",
+                                            "label": "Waluta (T)"
+                                        },
+                                        {
+                                            "name": "20",
+                                            "type": "text",
+                                            "label": "VAT% (U)"
+                                        },
+                                        {
+                                            "name": "21",
+                                            "type": "text",
+                                            "label": "Metoda płatności (V)"
+                                        },
+                                        {
+                                            "name": "22",
+                                            "type": "text",
+                                            "label": "Ilość (W)"
+                                        },
+                                        {
+                                            "name": "23",
+                                            "type": "text",
+                                            "label": "Uwagi (X)"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Values"
+                                }
+                            ]
+                        },
+                        "insertDataOption": {
+                            "mode": "chose",
+                            "label": "Insert rows"
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        },
+                        "insertUnformatted": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection (automatyzacjabiurowa@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertUnformatted",
+                        "type": "boolean",
+                        "label": "Unformatted",
+                        "required": true
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertDataOption",
+                        "type": "select",
+                        "label": "Insert data option",
+                        "validate": {
+                            "enum": [
+                                "INSERT_ROWS",
+                                "OVERWRITE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "file",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Numer faktury (A)"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "Data wystawienia (B)"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "Data sprzedaży (C)"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "Termin płatności / Zapłacono (D)"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "Nazwa sprzedawcy (E)"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "NIP sprzedawcy (F)"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "Ulica sprzedawcy (G)"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "Miasto sprzedawcy (H)"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "Kod pocztowy sprzedawcy (I)"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "Kraj sprzedawcy (J)"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "Nazwa nabywcy (K)"
+                            },
+                            {
+                                "name": "11",
+                                "type": "text",
+                                "label": "Ulica nabywcy (L)"
+                            },
+                            {
+                                "name": "12",
+                                "type": "text",
+                                "label": "Miasto nabywcy (M)"
+                            },
+                            {
+                                "name": "13",
+                                "type": "text",
+                                "label": "Kod pocztowy nabywcy (N)"
+                            },
+                            {
+                                "name": "14",
+                                "type": "text",
+                                "label": "Kraj nabywcy (O)"
+                            },
+                            {
+                                "name": "15",
+                                "type": "text",
+                                "label": "Produkt/usługa (P)"
+                            },
+                            {
+                                "name": "16",
+                                "type": "text",
+                                "label": "Wartość netto (Q)"
+                            },
+                            {
+                                "name": "17",
+                                "type": "text",
+                                "label": "Wartość VAT (R)"
+                            },
+                            {
+                                "name": "18",
+                                "type": "text",
+                                "label": "Wartość brutto (S)"
+                            },
+                            {
+                                "name": "19",
+                                "type": "text",
+                                "label": "Waluta (T)"
+                            },
+                            {
+                                "name": "20",
+                                "type": "text",
+                                "label": "VAT% (U)"
+                            },
+                            {
+                                "name": "21",
+                                "type": "text",
+                                "label": "Metoda płatności (V)"
+                            },
+                            {
+                                "name": "22",
+                                "type": "text",
+                                "label": "Ilość (W)"
+                            },
+                            {
+                                "name": "23",
+                                "type": "text",
+                                "label": "Uwagi (X)"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}
