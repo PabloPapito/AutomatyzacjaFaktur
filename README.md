@@ -56,7 +56,7 @@ To rozwiązanie pozwala zeskanować fakturę telefonem, zapisać ją w formacie 
 - Utwórz arkusz z kolumnami, np.:
   - Numer faktury, Data wystawienia, Data sprzedaży, Termin płatności / Zapłacono, Nazwa sprzedawcy, NIP sprzedawcy, Ulica sprzedawcy, Miasto sprzedawcy, Kod pocztowy sprzedawcy, Kraj sprzedawcy, Nazwa nabywcy, Ulica nabywcy, Miasto nabywcy, Kod pocztowy nabywcy, Kraj nabywcy, Produkt/usługa, Wartość netto, Wartość VAT, Wartość brutto, Waluta, VAT%, Metoda płatności, Ilość, Uwagi
 - Link do mojego Google Sheeta:
-  [Google Sheet - wzór](https://docs.google.com/spreadsheets/d/1XcNod5BhFseqvn1TxVz4i1LwbOT3YndlpyLGaeusaug/edit?usp=sharing)
+  [Google Sheet - wzór](https://docs.google.com/spreadsheets/d/1XcNod5BhFseqvn1TxVz4i1LwbOT3YndlpyLGaeusaug/edit?usp=sharing) - możesz go skopiować i wykorzystać, ale poczyść sobie wiersze (nagłówki zostaw!)
 
 ### 3. Stwórz folder w Dropbox
 - Zainstaluj aplikację **Dropbox** na telefon – dostępna na Androida i iOS.
