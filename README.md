@@ -164,10 +164,20 @@ To rozwiązanie jest dla ludzi – nie trzeba być programistą, żeby z niego s
 
 ## 🤝 Licencja i wykorzystanie
 
-Projekt typu **Open Source** – możesz go uruchomić, modyfikować i rozwijać.  
-Jeśli chcesz zlecić rozszerzenie lub wdrożenie tego rozwiązania – napisz do mnie:  
-👉 [https://automatyzacjabiurowa.pl](https://automatyzacjabiurowa.pl)
-na whats app grupie https://chat.whatsapp.com/FACPJbMCnp94yqSovEgeQD zamkniętej lub na linkedin
+To narzędzie jest **open-source** – możesz je:
+
+- uruchomić samodzielnie,
+- modyfikować pod swoje potrzeby,
+- rozwijać i dzielić się dalej.
+
+Chcesz rozszerzyć funkcjonalność? A może potrzebujesz pomocy przy wdrożeniu?
+
+📩 Odezwij się:
+- Przez formularz na stronie: [automatyzacjabiurowa.pl](https://automatyzacjabiurowa.pl)
+- Na LinkedIn: [linkedin.com/in/golen](https://www.linkedin.com/in/golen/)
+- Lub dołącz do mojej zamkniętej grupy na WhatsApp: [Kliknij tutaj, aby dołączyć](https://chat.whatsapp.com/FACPJbMCnp94yqSovEgeQD)
+
+Jestem tu, żeby pomóc.
 
 ---
 
